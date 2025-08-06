@@ -6,143 +6,150 @@
   <title>Pred-Loop</title>
   <style>
     body {
-      background-color: #0f172a;
-      font-family: 'Segoe UI', sans-serif;
-      color: #fff;
       margin: 0;
-      padding: 20px;
-      text-align: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #0a0f1a;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #121e2b;
+      padding: 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: #94a3b8;
-      margin-bottom: 2rem;
-    }
-
-    .card {
-      background-color: #1e293b;
-      padding: 25px;
-      border-radius: 15px;
-      max-width: 500px;
-      margin: 0 auto;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      text-align: left;
+      text-align: center;
+      margin-bottom: 10px;
+      color: #00ffe5;
     }
 
     label {
       display: block;
-      margin: 15px 0 5px;
-      font-weight: 600;
+      margin-top: 15px;
+      margin-bottom: 5px;
     }
 
     select, input[type="checkbox"] {
       width: 100%;
       padding: 10px;
+      background: #1e2d3a;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      color: #fff;
       margin-bottom: 10px;
-      font-size: 1rem;
     }
 
-    .indicators {
+    .checkbox-group {
       display: flex;
       flex-direction: column;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
-    .button {
-      background-color: #4f46e5;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 10px;
+    button {
       width: 100%;
-      transition: background 0.3s ease;
-    }
-
-    .button:hover {
-      background-color: #4338ca;
+      padding: 12px;
+      border: none;
+      background: #00ffe5;
+      color: #000;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
     }
 
     .result {
-      margin-top: 30px;
-      background: #1e40af;
-      padding: 15px;
-      border-radius: 10px;
-      color: #e0f2fe;
-      font-size: 1rem;
+      margin-top: 20px;
+      background: #0d1724;
+      padding: 20px;
+      border-radius: 12px;
+      display: none;
     }
 
-    .analytics-link {
-      display: inline-block;
-      margin-top: 25px;
-      text-decoration: none;
-      padding: 10px 20px;
-      background-color: #2563eb;
-      color: white;
-      border-radius: 8px;
+    .result span {
+      color: #00ffe5;
       font-weight: bold;
-      transition: background 0.3s ease;
-    }
-
-    .analytics-link:hover {
-      background-color: #1d4ed8;
     }
   </style>
 </head>
 <body>
-  <h1>🌐 Pred-Loop</h1>
-  <p class="subtitle">Live Crypto Price Prediction with AI</p>
+  <div class="container">
+    <h1>Pred-Loop</h1>
 
-  <div class="card">
-    <label for="crypto">Cryptocurrency:</label>
-    <select id="crypto">
-      <option>BTC/USDT</option>
-      <option>ETH/USDT</option>
+    <label for="symbol">Cryptocurrency:</label>
+    <select id="symbol">
+      <option value="BTC/USDT">BTC/USDT</option>
+      <option value="ETH/USDT">ETH/USDT</option>
     </select>
 
     <label for="model">Prediction Model:</label>
     <select id="model">
-      <option>LSTM</option>
-      <option>Random Forest</option>
-      <option>XGBoost</option>
+      <option value="LSTM">LSTM</option>
+      <option value="XGBoost">XGBoost</option>
     </select>
 
     <label for="timeframe">Timeframe:</label>
     <select id="timeframe">
-      <option>1 Hour</option>
-      <option>4 Hours</option>
-      <option>1 Day</option>
+      <option value="1h">1 Hour</option>
+      <option value="4h">4 Hours</option>
+      <option value="1d">1 Day</option>
     </select>
 
-    <div class="indicators">
-      <label><input type="checkbox" value="RSI" /> RSI</label>
-      <label><input type="checkbox" value="MACD" /> MACD</label>
-      <label><input type="checkbox" value="Bollinger Bands" /> Bollinger Bands</label>
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="rsi" /> RSI</label>
+      <label><input type="checkbox" id="macd" /> MACD</label>
+      <label><input type="checkbox" id="bollinger" /> Bollinger Bands</label>
     </div>
 
-    <button class="button" onclick="runPrediction()">⚡ Run Prediction</button>
+    <button id="predictBtn">⚡ Run Prediction</button>
+
+    <div class="result" id="resultCard">
+      <p><strong>Predicted Price:</strong> <span id="predictedPrice"></span></p>
+      <p><strong>Trend:</strong> <span id="trend"></span></p>
+      <p><strong>Confidence:</strong> <span id="confidence"></span></p>
+    </div>
   </div>
 
-  <div class="result" id="resultCard" style="display: none;">
-    <h2>🔍 Prediction Result</h2>
-    <p><strong>Predicted Price:</strong> <span id="predictedPrice">-</span></p>
-    <p><strong>Trend:</strong> <span id="trend">-</span></p>
-    <p><strong>Confidence:</strong> <span id="confidence">-</span></p>
-  </div>
+  <script>
+    const apiUrl = "https://fastapi-production-04271.up.railway.app/predict";
 
-  <a class="analytics-link" href="analytics.html">📊 View Analytics Page</a>
+    document.getElementById("predictBtn").addEventListener("click", async () => {
+      const symbol = document.getElementById("symbol").value;
+      const model = document.getElementById("model").value;
+      const timeframe = document.getElementById("timeframe").value;
 
-  <script src="script.js"></script>
+      const indicators = [];
+      if (document.getElementById("rsi").checked) indicators.push("RSI");
+      if (document.getElementById("macd").checked) indicators.push("MACD");
+      if (document.getElementById("bollinger").checked) indicators.push("Bollinger Bands");
+
+      const payload = { symbol, model, timeframe, indicators };
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        document.getElementById("predictedPrice").textContent = result.predicted_price || "N/A";
+        document.getElementById("trend").textContent = result.trend || "N/A";
+        document.getElementById("confidence").textContent = result.confidence + "%" || "N/A";
+        document.getElementById("resultCard").style.display = "block";
+      } catch (error) {
+        console.error("Prediction error:", error);
+        alert("Backend error or invalid response");
+      }
+    });
+  </script>
 </body>
-</html>   
+</html>
