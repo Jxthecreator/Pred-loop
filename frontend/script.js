@@ -1,49 +1,46 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const predictBtn = document.getElementById('predictBtn');
-  const resultCard = document.getElementById('resultCard');
-  const predictedPrice = document.getElementById('predictedPrice');
-  const trend = document.getElementById('trend');
-  const confidence = document.getElementById('confidence');
+document.addEventListener("DOMContentLoaded", () => {
+  const predictBtn = document.getElementById("predictBtn");
+  const resultCard = document.getElementById("resultCard");
+  const predictedPrice = document.getElementById("predictedPrice");
+  const trend = document.getElementById("trend");
+  const confidence = document.getElementById("confidence");
 
-  predictBtn.addEventListener('click', async () => {
-    const crypto = document.getElementById('crypto').value;
-    const model = document.getElementById('model').value;
-    const timeframe = document.getElementById('timeframe').value;
+  predictBtn.addEventListener("click", async () => {
+    const crypto = document.getElementById("crypto").value;
+    const model = document.getElementById("model").value;
+    const timeframe = document.getElementById("timeframe").value;
 
-    const indicatorElements = document.querySelectorAll('.indicators input[type="checkbox"]');
-    const indicators = Array.from(indicatorElements)
-      .filter(input => input.checked)
-      .map(input => input.value);
-
-    // Replace with your actual Railway backend URL
-    const API_URL = "https://your-railway-subdomain.up.railway.app/predict";
+    const indicators = [];
+    document.querySelectorAll(".indicators input:checked").forEach(input => {
+      indicators.push(input.value);
+    });
 
     try {
-      const response = await fetch(`${API_URL}`, {
-        method: 'POST',
+      const res = await fetch(`https://pred-loop-api.up.railway.app/fastapi-production/predict`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           coin: crypto,
           model: model,
           timeframe: timeframe,
-          indicators: indicators
-        })
+          indicators: indicators,
+        }),
       });
 
-      if (!response.ok) throw new Error('Prediction failed');
+      if (!res.ok) throw new Error("Prediction failed");
 
-      const data = await response.json();
+      const data = await res.json();
 
-      predictedPrice.textContent = `$${parseFloat(data.predicted_price).toLocaleString()}`;
-      trend.textContent = data.trend || "Uptrend";
-      confidence.textContent = `${data.confidence || 0}%`;
+      predictedPrice.textContent = `$${data.price}`;
+      trend.textContent = data.trend.toUpperCase();
+      confidence.textContent = `${data.confidence}%`;
 
-      resultCard.style.display = 'block';
-    } catch (error) {
-      alert('❌ Error: ' + error.message);
-      console.error('Prediction Error:', error);
+      resultCard.style.display = "block";
+    } catch (err) {
+      console.error(err);
+      alert("Failed to get prediction. Please try again.");
     }
   });
 });
