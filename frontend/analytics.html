@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PredLoop Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body style="background-color:#0a0a12; color:white; font-family:sans-serif; padding:20px;">
+    <h1>📊 PredLoop Analytics Dashboard</h1>
+    <p>Live metrics for model performance and confidence tracking.</p>
+
+    <div style="margin-top:40px;">
+        <h2>Model RMSE Comparison</h2>
+        <canvas id="rmseChart" width="600" height="300"></canvas>
+    </div>
+
+    <div style="margin-top:40px;">
+        <h2>Prediction Confidence (7-day Trend)</h2>
+        <canvas id="confidenceChart" width="600" height="300"></canvas>
+    </div>
+
+    <script src="analytics.js"></script>
+</body>
+</html>
