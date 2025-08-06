@@ -1,24 +1,34 @@
-
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from backend.api.endpoints import predict
 
 app = FastAPI()
-app.include_router(predict.router)
 
+# Allow CORS for frontend access (Vercel)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # You can change this to your Vercel URL for more security
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
-@app.websocket("/ws/BTCUSDT")
-async def btc_ws(websocket: WebSocket):
-    await websocket.accept()
-    import asyncio, random
-    while True:
-        await asyncio.sleep(2)
-        mock_price = 34000 + random.randint(-200, 200)
-        await websocket.send_json({"symbol": "BTCUSDT", "price": mock_price})
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to PredLoop Backend API!"}
+
+@app.post("/predict")
+async def predict(request: Request):
+    data = await request.json()
+
+    # Extract frontend inputs (optional for debugging)
+    crypto = data.get("crypto")
+    model = data.get("model")
+    timeframe = data.get("timeframe")
+    indicators = data.get("indicators", [])
+
+    # Dummy ML output (replace this with real prediction logic later)
+    return {
+        "predicted_price": 28347.15,
+        "trend": "Uptrend",
+        "confidence": 92.7
+    }
