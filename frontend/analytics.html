@@ -1,25 +1,75 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>PredLoop Analytics Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analytics - Pred-Loop</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0e1117;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+    }
+    header h1 {
+      font-size: 2rem;
+      color: #00bfff;
+    }
+    .container {
+      background: #161b22;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+      max-width: 900px;
+      width: 95%;
+    }
+    .chart-placeholder {
+      width: 100%;
+      height: 400px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #888;
+      margin-top: 2rem;
+    }
+    .back-btn {
+      margin-top: 2rem;
+      padding: 0.6rem 1.2rem;
+      background: #00bfff;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+  </style>
 </head>
-<body style="background-color:#0a0a12; color:white; font-family:sans-serif; padding:20px;">
-    <h1>📊 PredLoop Analytics Dashboard</h1>
-    <p>Live metrics for model performance and confidence tracking.</p>
+<body>
+  <header>
+    <h1>📊 Analytics Dashboard</h1>
+    <p>Visualize crypto predictions and historical performance</p>
+  </header>
 
-    <div style="margin-top:40px;">
-        <h2>Model RMSE Comparison</h2>
-        <canvas id="rmseChart" width="600" height="300"></canvas>
+  <div class="container">
+    <h2>Performance Overview</h2>
+    <div class="chart-placeholder">
+      Chart coming soon... 📈
     </div>
 
-    <div style="margin-top:40px;">
-        <h2>Prediction Confidence (7-day Trend)</h2>
-        <canvas id="confidenceChart" width="600" height="300"></canvas>
-    </div>
-
-    <script src="analytics.js"></script>
+    <a href="index.html" class="back-btn">← Back to Prediction</a>
+  </div>
 </body>
 </html>
