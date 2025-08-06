@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pred-Loop</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .title {
+      font-size: 2.5rem;
+      color: #00ffe5;
+      margin-bottom: 0;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #aaa;
+      margin-top: 4px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    select, input[type="checkbox"] {
+      margin-bottom: 10px;
+      padding: 6px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #00ffe5;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #00bfa6;
+    }
+
+    .result p {
+      margin: 10px 0;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">🔮 Pred-Loop</h1>
+    <p class="subtitle">Live Crypto Price Prediction with AI</p>
+
+    <div class="card">
+      <h2>⚙️ Control Panel</h2>
+
+      <label for="crypto">Cryptocurrency:</label>
+      <select id="crypto">
+        <option value="BTC/USDT">BTC/USDT</option>
+        <option value="ETH/USDT">ETH/USDT</option>
+        <option value="SOL/USDT">SOL/USDT</option>
+      </select>
+
+      <label for="model">Prediction Model:</label>
+      <select id="model">
+        <option value="lstm">LSTM</option>
+        <option value="linear">Linear Regression</option>
+        <option value="xgboost">XGBoost</option>
+      </select>
+
+      <label for="timeframe">Timeframe:</label>
+      <select id="timeframe">
+        <option value="1h">1 Hour</option>
+        <option value="4h">4 Hours</option>
+        <option value="1d">1 Day</option>
+      </select>
+
+      <div class="indicators">
+        <label><input type="checkbox" value="RSI" /> RSI</label>
+        <label><input type="checkbox" value="MACD" /> MACD</label>
+        <label><input type="checkbox" value="BollingerBands" /> Bollinger Bands</label>
+      </div>
+
+      <button id="predictBtn">🚀 Run Prediction</button>
+    </div>
+
+    <div class="card result" id="resultCard" style="display:none;">
+      <h2>📈 Prediction Result</h2>
+      <p><strong>Predicted Price:</strong> <span id="predictedPrice"></span></p>
+      <p><strong>Trend:</strong> <span id="trend"></span></p>
+      <p><strong>Confidence:</strong> <span id="confidence"></span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+    
