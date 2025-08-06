@@ -1,40 +1,46 @@
-const apiUrl = "https://fastapi-production-04271.up.railway.app/predict";
+const predictBtn = document.getElementById("predictBtn");
+const resultCard = document.getElementById("resultCard");
+const predictedPrice = document.getElementById("predictedPrice");
+const trend = document.getElementById("trend");
+const confidence = document.getElementById("confidence");
 
-document.getElementById("predictBtn").addEventListener("click", async () => {
-  const symbol = document.getElementById("symbol").value;
+predictBtn.addEventListener("click", async () => {
+  const crypto = document.getElementById("crypto").value;
   const model = document.getElementById("model").value;
   const timeframe = document.getElementById("timeframe").value;
 
-  const indicators = [];
-  if (document.getElementById("rsi").checked) indicators.push("RSI");
-  if (document.getElementById("macd").checked) indicators.push("MACD");
-  if (document.getElementById("bollinger").checked) indicators.push("Bollinger Bands");
-
-  const payload = {
-    symbol: symbol,
-    model: model,
-    timeframe: timeframe,
-    indicators: indicators,
-  };
+  const indicators = Array.from(document.querySelectorAll(".indicators input:checked"))
+                          .map(input => input.value);
 
   try {
-    const response = await fetch(apiUrl, {
+    predictBtn.textContent = "⏳ Predicting...";
+    predictBtn.disabled = true;
+
+    const response = await fetch("https://fastapi-production-04271.up.railway.app/predict", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        crypto,
+        model,
+        timeframe,
+        indicators
+      })
     });
 
-    const result = await response.json();
+    const data = await response.json();
 
-    document.getElementById("predictedPrice").textContent = result.predicted_price || "N/A";
-    document.getElementById("trend").textContent = result.trend || "N/A";
-    document.getElementById("confidence").textContent = result.confidence + "%" || "N/A";
-
-    document.getElementById("resultCard").style.display = "block";
+    // Show results
+    predictedPrice.textContent = `$${data.predicted_price.toFixed(2)}`;
+    trend.textContent = data.trend;
+    confidence.textContent = `${data.confidence}%`;
+    resultCard.style.display = "block";
   } catch (error) {
-    console.error("Prediction error:", error);
-    alert("Something went wrong while fetching prediction.");
+    console.error("Prediction failed:", error);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    predictBtn.textContent = "🚀 Run Prediction";
+    predictBtn.disabled = false;
   }
 });
