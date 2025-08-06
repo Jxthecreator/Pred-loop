@@ -7,84 +7,81 @@
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #0a0f1a;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0e1117;
       color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .container {
-      background: #121e2b;
-      padding: 30px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: #00ffe5;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 5px;
-    }
-
-    select, input[type="checkbox"] {
-      width: 100%;
-      padding: 10px;
-      background: #1e2d3a;
-      border: none;
-      border-radius: 8px;
-      color: #fff;
-      margin-bottom: 10px;
-    }
-
-    .checkbox-group {
       display: flex;
       flex-direction: column;
-      margin-bottom: 20px;
+      align-items: center;
+      min-height: 100vh;
     }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      background: #00ffe5;
-      color: #000;
+    header {
+      text-align: center;
+      padding: 2rem;
+    }
+    header h1 {
+      font-size: 2rem;
+      color: #00bfff;
+    }
+    .container {
+      background: #161b22;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+      max-width: 500px;
+      width: 90%;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
       font-weight: bold;
-      font-size: 16px;
-      border-radius: 10px;
+      color: #ccc;
+    }
+    select, input[type="checkbox"] {
+      margin-top: 0.5rem;
+      width: 100%;
+      padding: 0.5rem;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: #fff;
+    }
+    .indicators {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .btn {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: #00bfff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #000;
       cursor: pointer;
     }
-
     .result {
-      margin-top: 20px;
-      background: #0d1724;
-      padding: 20px;
-      border-radius: 12px;
-      display: none;
-    }
-
-    .result span {
-      color: #00ffe5;
-      font-weight: bold;
+      margin-top: 2rem;
+      background: #0d1117;
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid #30363d;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Pred-Loop</h1>
+  <header>
+    <h1>🌐 Pred-Loop</h1>
+    <p>Live Crypto Price Prediction</p>
+  </header>
 
-    <label for="symbol">Cryptocurrency:</label>
-    <select id="symbol">
+  <div class="container">
+    <label for="crypto">Cryptocurrency:</label>
+    <select id="crypto">
       <option value="BTC/USDT">BTC/USDT</option>
       <option value="ETH/USDT">ETH/USDT</option>
     </select>
@@ -102,54 +99,22 @@
       <option value="1d">1 Day</option>
     </select>
 
-    <div class="checkbox-group">
-      <label><input type="checkbox" id="rsi" /> RSI</label>
-      <label><input type="checkbox" id="macd" /> MACD</label>
-      <label><input type="checkbox" id="bollinger" /> Bollinger Bands</label>
+    <div class="indicators">
+      <label><input type="checkbox" value="RSI" /> RSI</label>
+      <label><input type="checkbox" value="MACD" /> MACD</label>
+      <label><input type="checkbox" value="Bollinger Bands" /> Bollinger Bands</label>
     </div>
 
-    <button id="predictBtn">⚡ Run Prediction</button>
+    <button class="btn" id="predictBtn">⚡ Run Prediction</button>
 
-    <div class="result" id="resultCard">
-      <p><strong>Predicted Price:</strong> <span id="predictedPrice"></span></p>
-      <p><strong>Trend:</strong> <span id="trend"></span></p>
-      <p><strong>Confidence:</strong> <span id="confidence"></span></p>
+    <div class="result" id="resultCard" style="display:none;">
+      <h3>📊 Prediction Result</h3>
+      <p><strong>Predicted Price:</strong> <span id="predictedPrice">--</span></p>
+      <p><strong>Trend:</strong> <span id="trend">--</span></p>
+      <p><strong>Confidence:</strong> <span id="confidence">--</span></p>
     </div>
   </div>
 
-  <script>
-    const apiUrl = "https://fastapi-production-04271.up.railway.app/predict";
-
-    document.getElementById("predictBtn").addEventListener("click", async () => {
-      const symbol = document.getElementById("symbol").value;
-      const model = document.getElementById("model").value;
-      const timeframe = document.getElementById("timeframe").value;
-
-      const indicators = [];
-      if (document.getElementById("rsi").checked) indicators.push("RSI");
-      if (document.getElementById("macd").checked) indicators.push("MACD");
-      if (document.getElementById("bollinger").checked) indicators.push("Bollinger Bands");
-
-      const payload = { symbol, model, timeframe, indicators };
-
-      try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-
-        const result = await response.json();
-
-        document.getElementById("predictedPrice").textContent = result.predicted_price || "N/A";
-        document.getElementById("trend").textContent = result.trend || "N/A";
-        document.getElementById("confidence").textContent = result.confidence + "%" || "N/A";
-        document.getElementById("resultCard").style.display = "block";
-      } catch (error) {
-        console.error("Prediction error:", error);
-        alert("Backend error or invalid response");
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
